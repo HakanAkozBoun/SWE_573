@@ -1,5 +1,5 @@
 # SWE_573
-SOFTWARE DEVELOPMENT PRACTICE I
+SOFTWARE DEVELOPMENT PRACTICE_I
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 <!--
