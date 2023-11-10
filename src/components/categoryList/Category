@@ -66,15 +66,6 @@ const Category = () => {
         <StyledCard sx={{ backgroundImage: `url(${drinks})` }} />
         <StyledTypography>Drinks</StyledTypography>
       </CardBox>
-
-      {/* {cat.map((category) => (
-        <Link href={`category/${category.id}`} sx={{ textDecoration: "none" }}>
-          <CardBox>
-            <StyledCard sx={{ backgroundImage: `url(${category.image})` }} />
-            <StyledTypography>{category.name}</StyledTypography>
-          </CardBox>
-        </Link>
-      ))} */}
     </Stack>
   );
 };
