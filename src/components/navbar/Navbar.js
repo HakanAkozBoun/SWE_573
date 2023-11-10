@@ -41,9 +41,9 @@ const Navbar = () => {
           <Box flex={{ xs: 25, md: 1 }}>
             <Typography
               variant="h4"
-              color={"tomato"}
+              color={"Green"}
               sx={{
-                fontFamily: "Splash , cursive",
+                fontFamily: "Railway , cursive",
                 textAlign: { xs: "center", md: "left" },
               }}
             >
@@ -105,7 +105,7 @@ const Navbar = () => {
         <Typography
           variant="h5"
           align="center"
-          color="red"
+          color="purple"
           sx={{ fontFamily: "Splash , cursive" }}
         >
           CookPad by Chef Hakan
