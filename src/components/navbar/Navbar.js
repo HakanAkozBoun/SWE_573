@@ -47,7 +47,7 @@ const Navbar = () => {
                 textAlign: { xs: "center", md: "left" },
               }}
             >
-              CookPad
+          CookPad by Chef Hakan
             </Typography>
           </Box>
           <MenuBox flex={1} sx={{ display: { xs: "none", md: "flex" } }}>
@@ -108,11 +108,11 @@ const Navbar = () => {
           color="red"
           sx={{ fontFamily: "Splash , cursive" }}
         >
-          Best Recepies from Talented Chefs!
+          CookPad by Chef Hakan
         </Typography>
       </Box>
     </>
   );
-};
+}; 
 
 export default Navbar;
