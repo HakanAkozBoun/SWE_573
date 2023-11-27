@@ -1,5 +1,14 @@
 import { Box, Container, Grid, styled, Typography } from "@mui/material";
 
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import 'swiper/css/pagination';
+
+// import required modules
+import { Pagination ,Autoplay} from 'swiper/modules';
 
 import Cocktails from "../../static/cocktails.jpg";
 import Lasagna from "../../static/lasagna.jpg";
@@ -47,7 +56,51 @@ const Hero = () => {
   }));
   return (
     <Container>
-      <Grid container direction={"row"} columnSpacing={1} rowSpacing={1}>
+      <Swiper
+        spaceBetween={50}
+        slidesPerView={2}
+        pagination={{
+          dynamicBullets: true,
+        }}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        modules={[Pagination,Autoplay]}
+        onSlideChange={() => console.log("slide change")}
+        onSwiper={(swiper) => console.log(swiper)}
+      >
+        <SwiperSlide>
+          <StyledCard sx={{ backgroundImage: `url(${Lasagna})` }}>
+            <StyledWrapper>
+              <StyledTypography>Lasagna</StyledTypography>
+            </StyledWrapper>
+          </StyledCard>
+        </SwiperSlide>
+        <SwiperSlide>
+        <StyledCard sx={{ backgroundImage: `url(${Fish})` }}>
+            <StyledWrapper>
+              <StyledTypography>Fish</StyledTypography>
+            </StyledWrapper>
+          </StyledCard>
+        </SwiperSlide>
+        <SwiperSlide>
+        <StyledCard sx={{ backgroundImage: `url(${Kebab})` }}>
+            <StyledWrapper>
+              <StyledTypography>Kebab</StyledTypography>
+            </StyledWrapper>
+          </StyledCard>
+        </SwiperSlide>
+        <SwiperSlide>
+        <StyledCard sx={{ backgroundImage: `url(${Cocktails})` }}>
+            <StyledWrapper>
+              <StyledTypography>Cocktails</StyledTypography>
+            </StyledWrapper>
+          </StyledCard>
+        </SwiperSlide>
+        ...
+      </Swiper>
+      {/* <Grid container direction={"row"} columnSpacing={1} rowSpacing={1}>
         <Grid item md={3} xs={6}>
           <StyledCard sx={{ backgroundImage: `url(${Lasagna})` }}>
             <StyledWrapper>
@@ -76,7 +129,7 @@ const Hero = () => {
             </StyledWrapper>
           </StyledCard>
         </Grid>
-      </Grid>
+      </Grid> */}
       <Category />
     </Container>
   );
