@@ -86,6 +86,32 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.psycopg2',
+#         'NAME': 'recipeblog',
+#         'USER': 'postgres',
+#         'PASSWORD': '1',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+#     # 'default': {
+#     #     'ENGINE': 'django.db.backends.postgresql_psycop2',
+#     #     'NAME': 'recipeblog',
+#     #     'USER': 'postgres',
+#     #     'PASSWORD': '1',
+#     #     'HOST': 'localhost',
+#     #     'PORT': '5432',                
+#     # }
+
+# }
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

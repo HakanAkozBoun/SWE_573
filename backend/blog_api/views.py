@@ -8,6 +8,9 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
+from django.forms.models import model_to_dict
+from django.core.files.storage import default_storage
+
 import base64
 # Create your views here.
 
@@ -37,9 +40,21 @@ class PopularPostsApiView(viewsets.ViewSet):
 @authentication_classes([])
 @permission_classes([])
 def GetUserList(request):
-    all_users = User.objects.all().values("username", "first_name", "last_name", 'email', 'is_active', 'last_login')
+    all_users = User.objects.all().values("id","username", "first_name", "last_name", 'email', 'is_active', 'last_login')
     user_list = list(all_users)
     return JsonResponse(user_list, safe=False)
+
+@api_view(['PUT'])
+def UpdateUser(request):
+    user = User.objects.get(id=request.data.get('id'))
+    user.username = request.data.get('user')
+    user.email = request.data.get('mail')
+    user.save()
+    return JsonResponse(True, safe=False)
+
+@api_view(['GET'])
+def GetUser(request):
+    return JsonResponse(model_to_dict(User.objects.get(id=request.GET.get('id'))), safe=False)
 
 @api_view(['GET'])
 @authentication_classes([])
@@ -66,6 +81,12 @@ def CreateCategory(request):
     test = category(name=request.data.get('name'), image=request.data.get('image'))
     test.save()
     return JsonResponse("OK", safe=False)
+
+@api_view(['POST'])
+def File(request):
+    file = request.FILES['file']
+    file_name = default_storage.save('image\\' + file.name, file)
+    return JsonResponse(file_name, safe=False)
 
 @api_view(['POST'])
 @authentication_classes([])
@@ -99,5 +120,6 @@ def Login(request):
     password=request.data.get('pass')
     user = authenticate(username=username, password=password)
     if user is not None:
-        return JsonResponse(json.loads('{"token":"' + base64.b64encode(bytes(username + ":" + password, 'utf-8')).decode('utf-8') + '", "name":"' + user.username + '"}'), safe=False)
+        return JsonResponse(json.loads('{"token":"' + base64.b64encode(bytes(username + ":" + password, 'utf-8')).decode('utf-8') + '", "id":' + str(user.id) + ',"name":"' + user.username + '"}'), safe=False)
     return JsonResponse("Wrong User or Password", safe=False)
+

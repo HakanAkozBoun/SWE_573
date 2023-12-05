@@ -59,7 +59,7 @@ export default function SignUp() {
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/CreateUser/`, dataPost)
       .then((response) => {
-        navigate("/");
+        navigate("/login");
       });
   };
 
