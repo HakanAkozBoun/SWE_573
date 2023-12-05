@@ -58,6 +58,7 @@ export default function SignIn() {
       .then((response) => {
         console.log(response)
         sessionStorage.setItem('token', response.data.token);
+        sessionStorage.setItem('user', response.data.id);
         navigate("/");
       });
   };

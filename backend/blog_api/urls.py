@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import blogApiView, categoryApiView, CategoryPostApiView, PopularPostsApiView, GetUserList, CreateUser, CreateCategory, GetCategoryList, Login,CreateBlog,GetBlog
+from .views import blogApiView, categoryApiView, CategoryPostApiView, PopularPostsApiView, GetUserList, CreateUser, CreateCategory, GetCategoryList, Login,CreateBlog,GetBlog,UpdateUser,GetUser,File
 from rest_framework import routers
 
 router = routers.SimpleRouter()
@@ -16,6 +16,8 @@ urlpatterns = [
     path('CreateCategory/', CreateCategory, name='CreateCategory'),
     path('Login/', Login, name='Login'),
     path('CreateBlog/', CreateBlog, name='CreateBlog'),
-    path('GetBlog/', GetBlog, name='GetBlog')
-    
+    path('GetBlog/', GetBlog, name='GetBlog'),
+    path('UpdateUser/', UpdateUser, name='UpdateUser'),
+    path('GetUser/', GetUser, name='GetUser'),
+    path('File/', File, name='File')
 ]

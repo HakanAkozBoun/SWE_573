@@ -9,7 +9,7 @@ import SignIn from "./components/login/login";
 import SignUp from "./components/login/signUp";
 import AddPost from "./components/posts/AddPost";
 import AddCategory from "./components/categoryList/AddCategory";
-
+import UserEdit from "./components/login/user";
 
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/addpost" element={<AddPost />} />
           <Route path="/addcategory" element={<AddCategory />} />
-
+          <Route path="/useredit" element={<UserEdit />} />
           
           
         </Routes>
