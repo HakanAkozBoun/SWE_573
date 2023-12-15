@@ -1,6 +1,73 @@
 from django.db import models
 
-# Create your models here.
+class food(models.Model):
+    name = models.CharField(max_length=255)
+    unit = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+ 
+class recipe(models.Model):
+    name = models.CharField(max_length=255)
+    blog = models.IntegerField()
+ 
+    def __str__(self):
+        return self.name
+    
+class nutrition(models.Model):
+    calorie = models.FloatField()
+    fat = models.FloatField()
+    sodium = models.FloatField()
+    calcium = models.FloatField()
+    protein = models.FloatField()
+    iron = models.FloatField()
+    carbonhydrates = models.FloatField()
+    food = models.IntegerField()
+ 
+    def __str__(self):
+        return self.unit
+ 
+class recipeitem(models.Model):
+    food = models.IntegerField()
+    unit = models.IntegerField()
+    amount = models.FloatField()
+    recipe =  models.IntegerField()
+    metricamount = models.IntegerField()
+    metricunit = models.IntegerField()
+ 
+    def __str__(self):
+        return self.food
+    
+class unit(models.Model):
+    name = models.CharField(max_length=255)
+    type = models.IntegerField()
+    
+    def __str__(self):
+        return self.name
+ 
+class unittype(models.Model):
+    name = models.CharField(max_length=255)
+ 
+    def __str__(self):
+        return self.name
+ 
+class unititem(models.Model):
+    imperial = models.CharField(max_length=255)
+    metric = models.CharField(max_length=255)
+    unit = models.IntegerField()
+ 
+    def __str__(self):
+        return self.metric
+ 
+class unitconversion(models.Model):
+    imperial = models.FloatField()
+    metric = models.FloatField()
+    mvalue = models.FloatField()
+    ivalue = models.FloatField()
+    unittype = models.IntegerField()
+ 
+    def __str__(self):
+        return self.metric
 
 class category(models.Model):
     name = models.CharField(max_length=255)

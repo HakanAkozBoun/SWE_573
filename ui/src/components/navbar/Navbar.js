@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
@@ -13,7 +13,16 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import PostSearch from "../search/PostSearch";
+
+import Button from '@mui/material/Button';
+import axios from "axios";
+
+
 const Navbar = () => {
+
+  const [name, setName] = React.useState("");
+
+
   const StyledToolbar = styled(Toolbar)({
     display: "flex",
     justifyContent: "center",
@@ -25,12 +34,38 @@ const Navbar = () => {
     cursor: "pointer",
   });
   const MenuItems = [
-    { Name: "Home", Link: "#" },
-    { Name: "Recipes", Link: "#" },
-    { Name: "About Us", Link: "#" },
-    { Name: "Subscribe", Link: "#" },
+    { Name: "Home", Link: "/" },
+    { Name: "Add Recipes", Link: "addpost" },
   ];
   const [openMenu, setOpenMenu] = useState(false);
+
+
+  const token = sessionStorage.getItem("token");
+  const hasToken = sessionStorage.getItem('user');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        axios
+        .get(`${process.env.REACT_APP_API_URL}/api/UserList/`, {
+          headers: {
+            Authorization: `Basic ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          console.log(response.data,hasToken)
+          let namess = response.data.filter((item) => item.id === Number(hasToken))[0].first_name;
+          setName(namess)
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+
   
   return (
     <>
@@ -51,10 +86,16 @@ const Navbar = () => {
             </Link>
           </Box>
           <MenuBox flex={1} sx={{ display: { xs: "none", md: "flex" } }}>
-            {MenuItems.map((item) => (
-              <Typography variant="body2">{item.Name}</Typography>
+            {MenuItems.map((item,index) => (
+              <Typography variant="body2" key="{index}">{item.Name}</Typography>
             ))}
           </MenuBox>
+          <MenuBox flex={1} sx={{ display: { xs: "none", md: "flex" } , flexDirection: 'row-reverse',pr:5}}>
+          {Boolean(hasToken) ? <p>Welcome, {name}</p> : <Button variant="text" href="/login">Login</Button>}
+          </MenuBox>
+    
+
+
           <Box flex={1}>
       
 
@@ -74,8 +115,8 @@ const Navbar = () => {
          
           <List>
             <ListItem>
-              {MenuItems.map((item) => (
-                <ListItemButton>{item.Name}</ListItemButton>
+              {MenuItems.map((item,index) => (
+                <ListItemButton key="{index}">{item.Name}</ListItemButton>
               ))}
             </ListItem>
        
@@ -94,7 +135,7 @@ const Navbar = () => {
         }}
       >
         <Typography align="center" variant="h5" mr={{ xs: 0, md: 1 }}>
-        Delicious recepies from worldwide 
+        Delicious recipes from worldwide 
         </Typography>
       </Box>
     </>
