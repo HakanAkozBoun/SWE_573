@@ -1,4 +1,4 @@
-import  React, { useEffect ,useState}  from "react";
+import React, { useEffect, useState } from "react";
 
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -16,8 +16,58 @@ import Select from "@mui/material/Select";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { nativeSelectClasses } from "@mui/material";
+
+
+
 
 export default function AddPost() {
+
+
+
+  const [foodData, setData] = useState([]);
+  const [newRow, setNewRow] = useState({ food: null, unit: 0, amount: 0 });
+
+
+  const addRow = () => {
+    if (!newRow.food || !newRow.unit || !newRow.amount) {
+      alert('Food,unit and amount are required.');
+      return;
+    }
+
+    const newRowWithId = { ...newRow };
+    setData([...foodData, newRowWithId]);
+    setNewRow({ food: null, unit: 3, amount: 3 });
+  };
+
+
+  ////////////////////////////////////////////
+
+  const [food, setFood] = React.useState([]);
+  const [unit, setUnit] = React.useState([]);
+  const [unitBase, setUnitBase] = React.useState([]);
+
+  const foodChange = (event) => {
+
+
+    const unitid = food.filter((item) => item.name === event.target.value)[0].unitid;
+
+    let unitdatdat = unitBase.filter((item) => item.type === unitid);
+    setUnit(unitdatdat);
+
+
+  };
+
+  /////////////////////////////////////////////////
+
+
   const navigate = useNavigate();
 
   const [cate, setCate] = React.useState("");
@@ -37,7 +87,7 @@ export default function AddPost() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
-    
+
   };
 
   useEffect(() => {
@@ -48,8 +98,23 @@ export default function AddPost() {
             headers: { Authorization: `Basic ${token}` },
           })
           .then((response) => {
-            console.log(response);
             listCate(response.data);
+          });
+
+        axios
+          .get(`${process.env.REACT_APP_API_URL}/api/FoodList/`, {
+            headers: { Authorization: `Basic ${token}` },
+          })
+          .then((response) => {
+            setFood(response.data);
+          });
+
+        axios
+          .get(`${process.env.REACT_APP_API_URL}/api/UnitList`, {
+            headers: { Authorization: `Basic ${token}` },
+          })
+          .then((response) => {
+            setUnitBase(response.data);
           });
       } catch (error) {
         console.log(error);
@@ -77,25 +142,77 @@ export default function AddPost() {
         console.log(response);
       });
 
-      let dataPost = {
-        category: cate,
-        title: data.get("title"),
-        slug: data.get("slug"),
-        excerpt: data.get("excerpt"),
-        content: data.get("content"),
-        contentTwo: data.get("contentTwo"),
-        image: "image/"+selectedFile.name,
-        ingredients: data.get("ingredients"),
-        postlabel: "POPULAR",
-      };
+    let dataPost = {
+      category: cate,
+      title: data.get("title"),
+      slug: data.get("slug"),
+      excerpt: data.get("excerpt"),
+      content: data.get("content"),
+      contentTwo: data.get("contentTwo"),
+      image: "image/" + selectedFile.name,
+      ingredients: data.get("ingredients"),
+      postlabel: "POPULAR",
+    };
 
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/CreateBlog/`, dataPost, {
         headers: { Authorization: `Basic ${token}` },
       })
       .then((response) => {
-        navigate("/");
         console.log(response);
+
+
+
+
+
+
+        const newData = [...foodData];
+
+
+        newData.forEach((datdat) => {
+
+          console.log(datdat)
+
+
+          let foodID = food.filter((item) => item.name === datdat.food)[0].unitid;
+          datdat.food = foodID;
+
+
+          let unitID = unitBase.filter((item) => item.name === datdat.unit)[0].id;
+          datdat.unit = unitID;
+
+        });
+
+
+        setData(newData);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        let dataPost2 = {
+          name: data.get("ingredients"),
+          blog: response.data,
+          list: foodData
+        };
+
+        axios
+          .post(`${process.env.REACT_APP_API_URL}/api/CreateRecipe/`, dataPost2, {
+            headers: { Authorization: `Basic ${token}` },
+          })
+          .then((response) => {
+            console.log(response);
+            navigate("/");
+          });
       });
   };
 
@@ -111,10 +228,10 @@ export default function AddPost() {
             <Grid item xs={12} sm={6}>
               <Box sx={{ minWidth: 120 }}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
+                  <InputLabel>
                     Category
                   </InputLabel>
-                  <Select label="Age" onChange={handleChange}>
+                  <Select label="Category" onChange={handleChange}>
                     {catelist.map((res) => (
                       <MenuItem value={res.id}>{res.name}</MenuItem>
                     ))}
@@ -177,11 +294,74 @@ export default function AddPost() {
               <TextField
                 id="ingredients"
                 name="ingredients"
-                label="Ingredients"
+                label="Ingredients List Name"
                 fullWidth
                 variant="standard"
               />
+
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Food</TableCell>
+                      <TableCell align="right">Unit</TableCell>
+                      <TableCell align="right">Amount</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {foodData.map((row) => (
+                      <TableRow
+                        key={row.name}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+
+                        <TableCell component="th" scope="row">
+                          {row.food}
+                        </TableCell>
+                        <TableCell align="right">{row.unit}</TableCell>
+                        <TableCell align="right">{row.amount}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
             </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth>
+                <InputLabel>
+                  Food
+                </InputLabel>
+                <Select label="Food" size="small" value={newRow.food} onChange={(e) => { foodChange(e); setNewRow({ ...newRow, food: e.target.value }) }}>
+                  {food.map((res) => (
+                    <MenuItem value={res.name}>{res.name}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <FormControl fullWidth>
+                <InputLabel>
+                  Unit
+                </InputLabel>
+                <Select label="Unit" size="small" value={newRow.unit} onChange={(e) => setNewRow({ ...newRow, unit: e.target.value })}>
+                  {unit.map((res) => (
+                    <MenuItem value={res.name}>{res.name}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <FormControl fullWidth>
+                <TextField label="Amount" size="small" variant="outlined" type="number" value={newRow.amount}
+                  onChange={(e) => setNewRow({ ...newRow, amount: Number(e.target.value) })} />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <Button variant="contained" onClick={addRow}>Add Food</Button>
+            </Grid>
+
 
             <Grid item xs={12} sm={6}>
               <input type="file" id="file" onChange={handleFileChange} />
