@@ -1,5 +1,5 @@
 import json
-from .models import blog, category, unittype, unititem, food, recipe, recipeitem, unitconversion, unit, nutrition
+from .models import blog, category, unittype, unititem, food, recipe, unitconversion, unit, nutrition, comment
 from .serializers import blogSerializer, categorySerializer
 from rest_framework import viewsets
 from rest_framework import mixins
@@ -81,6 +81,18 @@ def File(request):
 def CreateBlog(request):
     _blog = blog.objects.create(category_id=request.data.get('category'), title=request.data.get('title'),slug=request.data.get('slug'),excerpt=request.data.get('excerpt'),
     content=request.data.get('content'),contentTwo=request.data.get('contentTwo'),image=request.data.get('image'),ingredients=request.data.get('ingredients'),postlabel=request.data.get('postlabel'))
+
+    list=request.data.get('list')
+    conversion = unitconversion.objects.all()
+    for item in list:
+        metricamount = item.get('amount')
+        metricunit = item.get('unit')
+        _conversion = conversion.filter(imperial=item.get('unit'))
+        if _conversion:
+            metricamount /= _conversion.first().ivalue
+            metricunit = _conversion.first().metric
+        recipe.objects.create(food=item.get('food'), unit=item.get('unit'), amount=item.get('amount'), blog=_blog.id, metricamount=metricamount, metricunit=metricunit)
+    
     return JsonResponse(_blog.id, safe=False)
 
 @api_view(['GET'])
@@ -109,31 +121,18 @@ def GetFoodList(request):
     return JsonResponse(list, safe=False)
 
 @api_view(['GET'])
-def GetRecipe(request):
-    return JsonResponse(model_to_dict(recipe.objects.get(id=request.GET.get('id'))), safe=False)
-
-@api_view(['GET'])
 def GetRecipeList(request):
-    return JsonResponse(list(recipe.objects.all().values("id", "name")), safe=False)
-
-@api_view(['GET'])
-def GetRecipeItem(request):
-    return JsonResponse(model_to_dict(recipeitem.objects.get(id=request.GET.get('id'))), safe=False)
-
-@api_view(['GET'])
-def GetRecipeItemList(request):
     list = []
-    current = recipeitem.objects.filter(recipe=request.GET.get('recipe'))
+    current = recipe.objects.filter(blog=request.GET.get('blog'))
     _food = food.objects.values_list('name', flat=True).all()
     _unit = unit.objects.values_list('name', flat=True).all()
-    _recipe = recipe.objects.values_list('name', flat=True).all()
     for item in current:
-        list.append({ "food" : _food.get(id=item.food) , "unit" : _unit.get(id=item.unit), "unitid":item.unit, "amount":item.amount, "recipe":_recipe.get(id=item.recipe), "recipeid": item.recipe, "metricamount":item.metricamount, "metricunit":_unit.get(id=item.metricunit), "metricunitid":item.metricunit})
+        list.append({ "food" : _food.get(id=item.food) , "unit" : _unit.get(id=item.unit), "unitid":item.unit, "amount":item.amount, "metricamount":item.metricamount, "metricunit":_unit.get(id=item.metricunit), "metricunitid":item.metricunit})
     return JsonResponse(list, safe=False)
 
 @api_view(['GET'])
 def GetUnitList(request):
-    return JsonResponse(list(unit.objects.all().values("id", "name", "type")), safe=False)
+    return JsonResponse(list(unit.objects.all().values("id", "name","type")), safe=False)
 
 @api_view(['GET'])
 def GetUnitType(request):
@@ -157,9 +156,9 @@ def GetUnitConversionList(request):
 
 @api_view(['GET'])
 def GetNutrition(request):
-    _recipe = recipe.objects.get(id=request.GET.get('recipe'))
+    _blog = blog.objects.get(id=request.GET.get('blog'))
     _nutrition = nutrition.objects.all()
-    _recipeitem = recipeitem.objects.filter(recipe=request.GET.get('recipe'))
+    _recipe = recipe.objects.filter(blog=_blog.id)
     calorie = 0
     fat = 0
     sodium = 0
@@ -168,7 +167,7 @@ def GetNutrition(request):
     iron = 0
     carbonhydrates = 0
 
-    for i in _recipeitem:
+    for i in _recipe:
         __nutrition = _nutrition.filter(food=i.food).first()
         if __nutrition:
             calorie += __nutrition.calorie * i.metricamount
@@ -179,22 +178,22 @@ def GetNutrition(request):
             iron += __nutrition.iron * i.metricamount
             carbonhydrates += __nutrition.carbonhydrates * i.metricamount
 
-    return JsonResponse(json.loads('{"recipe":"' + str(_recipe.name) + '","recipeid":' + str(_recipe.id) + ',"calorie":' + str(calorie) + ',"fat":' + str(fat) + ',"sodium":' + str(sodium) + ',"calcium":' + str(calcium) + ',"protein":' + str(protein) + ',"iron":' + str(iron) + ',"carbonhydrates":' + str(carbonhydrates) + '}'), safe=False)
+    return JsonResponse(json.loads('{"blog":"' + str(_blog.title) + '","blogid":' + str(_blog.id) + ',"calorie":' + str(calorie) + ',"fat":' + str(fat) + ',"sodium":' + str(sodium) + ',"calcium":' + str(calcium) + ',"protein":' + str(protein) + ',"iron":' + str(iron) + ',"carbonhydrates":' + str(carbonhydrates) + '}'), safe=False)
+
+@api_view(['GET'])
+def GetCommentList(request):
+    list = []
+    _user = User.objects.all()
+    _list = comment.objects.filter(blog=request.GET.get('blog'))
+    for i in _list:
+        __user = _user.filter(id=i.user).first()
+        list.append({ "name" : __user.first_name , "lastname" : __user.last_name, "userid":__user.id, "blogid":i.blog, "text": i.text})
+    return JsonResponse(list, safe=False)
 
 @api_view(['POST'])
-def CreateRecipe(request):
-    list=request.data.get('list')
-    current = recipe.objects.create(name=request.data.get('name'), blog=request.data.get('blog'))
-    conversion = unitconversion.objects.all()
-    for item in list:
-        metricamount = item.get('amount')
-        metricunit = item.get('unit')
-        _conversion = conversion.filter(imperial=item.get('unit'))
-        if _conversion:
-            metricamount /= _conversion.first().ivalue
-            metricunit = _conversion.first().metric
-        recipeitem.objects.create(food=item.get('food'), unit=item.get('unit'), amount=item.get('amount'), recipe=current.id, metricamount=metricamount, metricunit=metricunit)
-    return JsonResponse("ok", safe=False)
+def CreateComment(request):
+    _comment = comment.objects.create(user=request.data.get('user'),blog=request.data.get('blog'),text=request.data.get('text'))
+    return JsonResponse(_comment.id, safe=False)
 
 @api_view(['POST'])
 # @authentication_classes([])

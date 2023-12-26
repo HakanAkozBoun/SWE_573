@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import blogApiView, categoryApiView, CategoryPostApiView, PopularPostsApiView, GetUserList, CreateUser, CreateCategory, GetCategoryList, Login,CreateBlog,GetBlog,UpdateUser, GetUser, File, GetUnitItemList, GetFoodList, GetRecipeItemList, GetRecipeList, GetUnitTypeList, GetFood, GetRecipe, GetRecipeItem, GetUnitType, GetUnitItem, GetUnitConversionList, GetUnitList, CreateRecipe, GetNutrition
+from .views import blogApiView, categoryApiView, CategoryPostApiView, PopularPostsApiView, GetUserList, CreateUser, CreateCategory, GetCategoryList, Login,CreateBlog,GetBlog,UpdateUser, GetUser, File, GetUnitItemList, GetFoodList, GetRecipeList, GetUnitTypeList, GetFood, GetUnitType, GetUnitItem, GetUnitConversionList, GetUnitList, GetNutrition, CreateComment, GetCommentList
 from rest_framework import routers
 
 router = routers.SimpleRouter()
@@ -14,13 +14,11 @@ urlpatterns = [
     path('UnitItemList/', GetUnitItemList, name='UnitItemList'),
     path('UnitItem/', GetUnitItem, name='UnitItem'),
     path('UnitList/', GetUnitList, name='UnitList'),
+    path('CreateComment/', CreateComment, name='CreateComment'),
+    path('CommentList/', GetCommentList, name='CommentList'),
     path('Food/', GetFood, name='Food'),
     path('FoodList/', GetFoodList, name='FoodList'),
-    path('RecipeItemList/', GetRecipeItemList, name='RecipeItemList'),
-    path('RecipeItem/', GetRecipeItem, name='RecipeItem'),
     path('RecipeList/', GetRecipeList, name='RecipeList'),
-    path('Recipe/', GetRecipe, name='Recipe'),
-    path('CreateRecipe/', CreateRecipe, name='CreateRecipe'),
     path('UnitTypeList/', GetUnitTypeList, name='UnitTypeList'),
     path('UnitType/', GetUnitType, name='UnitType'),
     path('Nutrition/', GetNutrition, name='Nutrition'),
