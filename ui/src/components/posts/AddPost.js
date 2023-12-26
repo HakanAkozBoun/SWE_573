@@ -14,7 +14,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -23,12 +23,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { nativeSelectClasses } from "@mui/material";
 
 
 
 
 export default function AddPost() {
+
+  const location = useLocation();
+
+
+  console.log("data", location.state)
+
+
 
 
 
@@ -71,6 +77,7 @@ export default function AddPost() {
   const navigate = useNavigate();
 
   const [cate, setCate] = React.useState("");
+
 
   const [catelist, listCate] = React.useState([]);
 
@@ -142,6 +149,26 @@ export default function AddPost() {
         console.log(response);
       });
 
+
+
+
+
+
+    const newData = [...foodData];
+
+
+    newData.forEach((datdat) => {
+      let foodID = food.filter((item) => item.name === datdat.food)[0].unitid;
+      datdat.food = foodID;
+
+
+      let unitID = unitBase.filter((item) => item.name === datdat.unit)[0].id;
+      datdat.unit = unitID;
+
+    });
+
+
+    setData(newData);
     let dataPost = {
       category: cate,
       title: data.get("title"),
@@ -152,6 +179,7 @@ export default function AddPost() {
       image: "image/" + selectedFile.name,
       ingredients: data.get("ingredients"),
       postlabel: "POPULAR",
+      list: foodData
     };
 
     axios
@@ -160,59 +188,7 @@ export default function AddPost() {
       })
       .then((response) => {
         console.log(response);
-
-
-
-
-
-
-        const newData = [...foodData];
-
-
-        newData.forEach((datdat) => {
-
-          console.log(datdat)
-
-
-          let foodID = food.filter((item) => item.name === datdat.food)[0].unitid;
-          datdat.food = foodID;
-
-
-          let unitID = unitBase.filter((item) => item.name === datdat.unit)[0].id;
-          datdat.unit = unitID;
-
-        });
-
-
-        setData(newData);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        let dataPost2 = {
-          name: data.get("ingredients"),
-          blog: response.data,
-          list: foodData
-        };
-
-        axios
-          .post(`${process.env.REACT_APP_API_URL}/api/CreateRecipe/`, dataPost2, {
-            headers: { Authorization: `Basic ${token}` },
-          })
-          .then((response) => {
-            console.log(response);
-            navigate("/");
-          });
+        navigate("/");
       });
   };
 
@@ -246,6 +222,7 @@ export default function AddPost() {
                 id="title"
                 name="title"
                 label="Title"
+                defaultValue={location.state === null?null:location.state.title}
                 fullWidth
                 variant="standard"
               />
@@ -256,6 +233,7 @@ export default function AddPost() {
                 id="slug"
                 name="slug"
                 label="Slug"
+                defaultValue={location.state === null?null:location.state.slug}
                 fullWidth
                 variant="standard"
               />
@@ -266,6 +244,7 @@ export default function AddPost() {
                 id="excerpt"
                 name="excerpt"
                 label="Excerpt"
+                defaultValue={location.state === null?null:location.state.excerpt}
                 fullWidth
                 variant="standard"
               />
@@ -277,6 +256,7 @@ export default function AddPost() {
                 id="content"
                 name="content"
                 label="Description"
+                defaultValue={location.state === null?null:location.state.content}
                 fullWidth
                 variant="standard"
               />
@@ -286,6 +266,7 @@ export default function AddPost() {
                 id="contentTwo"
                 name="contentTwo"
                 label="Instruction List"
+                defaultValue={location.state === null?null:location.state.contentTwo}
                 fullWidth
                 variant="standard"
               />
@@ -294,6 +275,7 @@ export default function AddPost() {
               <TextField
                 id="ingredients"
                 name="ingredients"
+                defaultValue={location.state === null?null:location.state.ingredients}
                 label="Ingredients List Name"
                 fullWidth
                 variant="standard"
@@ -354,7 +336,7 @@ export default function AddPost() {
             </Grid>
             <Grid item xs={12} sm={3}>
               <FormControl fullWidth>
-                <TextField label="Amount" size="small" variant="outlined" type="number" value={newRow.amount}
+                <TextField label="Amount" size="small" variant="outlined" type="number" defaultValue={newRow.amount}
                   onChange={(e) => setNewRow({ ...newRow, amount: Number(e.target.value) })} />
               </FormControl>
             </Grid>

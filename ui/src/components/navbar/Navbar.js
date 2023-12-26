@@ -135,7 +135,7 @@ const Navbar = () => {
         }}
       >
         <Typography align="center" variant="h5" mr={{ xs: 0, md: 1 }}>
-        Delicious recipes from worldwide 
+        Delicious recepies from worldwide 
         </Typography>
       </Box>
     </>

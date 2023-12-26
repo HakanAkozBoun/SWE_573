@@ -6,13 +6,14 @@ class food(models.Model):
 
     def __str__(self):
         return self.name
- 
-class recipe(models.Model):
-    name = models.CharField(max_length=255)
-    blog = models.IntegerField()
+    
+class comment(models.Model):
+    blog =  models.IntegerField()
+    user = models.IntegerField()
+    text = models.CharField(max_length=255)
  
     def __str__(self):
-        return self.name
+        return self.recipe
     
 class nutrition(models.Model):
     calorie = models.FloatField()
@@ -27,11 +28,11 @@ class nutrition(models.Model):
     def __str__(self):
         return self.unit
  
-class recipeitem(models.Model):
+class recipe(models.Model):
     food = models.IntegerField()
     unit = models.IntegerField()
     amount = models.FloatField()
-    recipe =  models.IntegerField()
+    blog =  models.IntegerField()
     metricamount = models.IntegerField()
     metricunit = models.IntegerField()
  

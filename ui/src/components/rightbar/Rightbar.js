@@ -35,7 +35,7 @@ const Rightbar = () => {
       </Typography>
       <Typography align="left" variant="body1">
         {" "}
-        I am a computer engineer. Love to cook. Here is my own recipes that you can try. <br />{" "}
+        I am a computer engineer. Love to cook. Here is my own recepies that you can try. <br />{" "}
       </Typography>
 
       <Typography align="center" color="white" bgcolor="purple" mt={2}>
