@@ -62,13 +62,30 @@ def GetCategoryList(request):
 
 @api_view(['POST'])
 def CreateUser(request):
-    User.objects.create_user(username=request.data.get('user'),email=request.data.get('mail'),first_name="hakan", last_name="akoz", password=request.data.get('pass'))
+    _id=request.data.get('id')
+    if _id is None:
+        User.objects.create_user(username=request.data.get('user'),email=request.data.get('mail'),first_name="hakan", last_name="akoz", password=request.data.get('pass'))
+    else:
+        user = User.objects.get(id=request.data.get('id'))
+        if user is None:
+            return JsonResponse("id not found", safe=False)
+        user.username = request.data.get('user')
+        user.email = request.data.get('mail')
+        user.save()
     return JsonResponse("OK", safe=False)
 
 @api_view(['POST'])
 def CreateCategory(request):
-    test = category(name=request.data.get('name'), image=request.data.get('image'))
-    test.save()
+    _id=request.data.get('id')
+    if _id is None:
+        category.objects.create(name=request.data.get('name'), image=request.data.get('image'))
+    else:
+        _category = category.objects.filter(id=_id).first()
+        if _category is None:
+            return JsonResponse("id not found", safe=False)
+        _category.name=request.data.get('name')
+        _category.image=request.data.get('image')
+        _category.save()
     return JsonResponse("OK", safe=False)
 
 @api_view(['POST'])
@@ -79,8 +96,27 @@ def File(request):
 
 @api_view(['POST'])
 def CreateBlog(request):
-    _blog = blog.objects.create(category_id=request.data.get('category'), title=request.data.get('title'),slug=request.data.get('slug'),excerpt=request.data.get('excerpt'),
-    content=request.data.get('content'),contentTwo=request.data.get('contentTwo'),image=request.data.get('image'),ingredients=request.data.get('ingredients'),postlabel=request.data.get('postlabel'))
+    _id=request.data.get('id')
+    if _id is None:
+        _blog = blog.objects.create(category_id=request.data.get('category'), title=request.data.get('title'),slug=request.data.get('slug'),excerpt=request.data.get('excerpt'),content=request.data.get('content'),contentTwo=request.data.get('contentTwo'),image=request.data.get('image'),ingredients=request.data.get('ingredients'),postlabel=request.data.get('postlabel'))
+    else:
+        _blog = blog.objects.filter(id=_id).first()
+        if _blog is None:
+             return JsonResponse("id not found", safe=False)
+        _blog.category_id=request.data.get('category')
+        _blog.title=request.data.get('title')
+        _blog.slug=request.data.get('slug')
+        _blog.excerpt=request.data.get('excerpt')
+        _blog.content=request.data.get('content')
+        _blog.contentTwo=request.data.get('contentTwo')
+        _blog.image=request.data.get('image')
+        _blog.ingredients=request.data.get('ingredients')
+        _blog.postlabel=request.data.get('postlabel')
+        _blog.save()
+
+        list = recipe.objects.filter(blog=_id)
+        for item in list:
+            item.delete()
 
     list=request.data.get('list')
     conversion = unitconversion.objects.all()
@@ -92,7 +128,6 @@ def CreateBlog(request):
             metricamount /= _conversion.first().ivalue
             metricunit = _conversion.first().metric
         recipe.objects.create(food=item.get('food'), unit=item.get('unit'), amount=item.get('amount'), blog=_blog.id, metricamount=metricamount, metricunit=metricunit)
-    
     return JsonResponse(_blog.id, safe=False)
 
 @api_view(['GET'])
@@ -166,7 +201,6 @@ def GetNutrition(request):
     protein = 0
     iron = 0
     carbonhydrates = 0
-
     for i in _recipe:
         __nutrition = _nutrition.filter(food=i.food).first()
         if __nutrition:
@@ -177,7 +211,6 @@ def GetNutrition(request):
             protein += __nutrition.protein * i.metricamount
             iron += __nutrition.iron * i.metricamount
             carbonhydrates += __nutrition.carbonhydrates * i.metricamount
-
     return JsonResponse(json.loads('{"blog":"' + str(_blog.title) + '","blogid":' + str(_blog.id) + ',"calorie":' + str(calorie) + ',"fat":' + str(fat) + ',"sodium":' + str(sodium) + ',"calcium":' + str(calcium) + ',"protein":' + str(protein) + ',"iron":' + str(iron) + ',"carbonhydrates":' + str(carbonhydrates) + '}'), safe=False)
 
 @api_view(['GET'])
@@ -187,12 +220,24 @@ def GetCommentList(request):
     _list = comment.objects.filter(blog=request.GET.get('blog'))
     for i in _list:
         __user = _user.filter(id=i.user).first()
-        list.append({ "name" : __user.first_name , "lastname" : __user.last_name, "userid":__user.id, "blogid":i.blog, "text": i.text})
+        list.append({ "id":i.id, "name" : __user.first_name , "lastname" : __user.last_name, "userid":__user.id, "blogid":i.blog, "text": i.text})
     return JsonResponse(list, safe=False)
 
 @api_view(['POST'])
 def CreateComment(request):
-    _comment = comment.objects.create(user=request.data.get('user'),blog=request.data.get('blog'),text=request.data.get('text'))
+    _id=request.data.get('id')
+    if _id is None:
+        _comment = comment.objects.create(user=request.data.get('user'),blog=request.data.get('blog'),text=request.data.get('text'))
+    else:
+        _comment = comment.objects.filter(id=_id).first()
+        if _comment is None:
+            return JsonResponse("id not found", safe=False)
+        _comment.user=request.data.get('user')
+        _comment.blog=request.data.get('blog')
+        _comment.text=request.data.get('text')
+        _comment.save()
+        return JsonResponse(_comment.id, safe=False)
+    
     return JsonResponse(_comment.id, safe=False)
 
 @api_view(['POST'])

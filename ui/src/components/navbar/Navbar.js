@@ -35,7 +35,7 @@ const Navbar = () => {
   });
   const MenuItems = [
     { Name: "Home", Link: "/" },
-    { Name: "Add Recipes", Link: "addpost" },
+    { Name: "Add Recipes", Link: "/addpost" },
   ];
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -47,17 +47,17 @@ const Navbar = () => {
     const fetchData = async () => {
       try {
         axios
-        .get(`${process.env.REACT_APP_API_URL}/api/UserList/`, {
-          headers: {
-            Authorization: `Basic ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          console.log(response.data,hasToken)
-          let namess = response.data.filter((item) => item.id === Number(hasToken))[0].first_name;
-          setName(namess)
-        });
+          .get(`${process.env.REACT_APP_API_URL}/api/UserList/`, {
+            headers: {
+              Authorization: `Basic ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            console.log(response.data, hasToken)
+            let namess = response.data.filter((item) => item.id === Number(hasToken))[0].first_name;
+            setName(namess)
+          });
       } catch (error) {
         console.log(error);
       }
@@ -66,7 +66,7 @@ const Navbar = () => {
   }, []);
 
 
-  
+
   return (
     <>
       <AppBar color="default" position="sticky" elevation={0}>
@@ -81,26 +81,28 @@ const Navbar = () => {
                   textAlign: { xs: "center", md: "left" },
                 }}
               >
-                  CookPad by Chef Hakan
+                CookPad by Chef Hakan
               </Typography>
             </Link>
           </Box>
           <MenuBox flex={1} sx={{ display: { xs: "none", md: "flex" } }}>
-            {MenuItems.map((item,index) => (
-              <Typography variant="body2" key="{index}">{item.Name}</Typography>
+            {MenuItems.map((item, index) => (
+              <Link href={item.Link} underline="none">
+                {item.Name}
+              </Link>
             ))}
           </MenuBox>
-          <MenuBox flex={1} sx={{ display: { xs: "none", md: "flex" } , flexDirection: 'row-reverse',pr:5}}>
-          {Boolean(hasToken) ? <p>Welcome, {name}</p> : <Button variant="text" href="/login">Login</Button>}
+          <MenuBox flex={1} sx={{ display: { xs: "none", md: "flex" }, flexDirection: 'row-reverse', pr: 5 }}>
+            {Boolean(hasToken) ? <p>Welcome, {name}</p> : <Button variant="text" href="/login">Login</Button>}
           </MenuBox>
-    
+
 
 
           <Box flex={1}>
-      
 
-    
-      <PostSearch />
+
+
+            <PostSearch />
             <MenuIcon
               sx={{ display: { xs: "flex", md: "none" }, cursor: "pointer" }}
               onClick={() => setOpenMenu(!openMenu)}
@@ -112,14 +114,14 @@ const Navbar = () => {
           open={openMenu}
           onClose={() => setOpenMenu(!openMenu)}
         >
-         
+
           <List>
             <ListItem>
-              {MenuItems.map((item,index) => (
+              {MenuItems.map((item, index) => (
                 <ListItemButton key="{index}">{item.Name}</ListItemButton>
               ))}
             </ListItem>
-       
+
           </List>
           <PostSearch />
         </Drawer>
@@ -135,7 +137,7 @@ const Navbar = () => {
         }}
       >
         <Typography align="center" variant="h5" mr={{ xs: 0, md: 1 }}>
-        Delicious recepies from worldwide 
+          Delicious recepies from worldwide
         </Typography>
       </Box>
     </>

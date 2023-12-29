@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -7,13 +7,16 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 
 export default function AdCategory() {
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
+  const location = useLocation();
 
+  console.log(location.name)
 
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -21,13 +24,13 @@ export default function AdCategory() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
-    
+
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const token = sessionStorage.getItem("token");
+
 
 
 
@@ -45,11 +48,22 @@ export default function AdCategory() {
         console.log(response);
       });
 
+    let dataPost
 
-    let dataPost = {
-      name: data.get("name"),
-      image: "image/"+selectedFile.name,
-    };
+
+    if (location.state.edit === 1) {
+
+      dataPost = {
+        id: location.state.id,
+        name: data.get("name"),
+        image: selectedFile?"image/" + selectedFile.name:location.state.image,
+      };
+    } else {
+      dataPost = {
+        name: data.get("name"),
+        image: "image/" + selectedFile.name,
+      };
+    }
 
 
     axios
@@ -80,6 +94,7 @@ export default function AdCategory() {
                 label="Name"
                 name="name"
                 autoComplete="name"
+                defaultValue={location.state === null ? null : location.state.name}
                 autoFocus
               />
             </Grid>

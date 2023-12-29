@@ -197,7 +197,16 @@ const DetailsPage = () => {
   const handleClick = () => {
 
     navigate('/addpost', { state: { ...blogDetails } });
+
   };
+
+  const handleEdit = () => {
+
+    navigate('/addpost', { state: { edit:1,...blogDetails } });
+
+  };
+
+  
 
   return (
     <Container>
@@ -321,9 +330,9 @@ const DetailsPage = () => {
 
 
 
-      <Button variant="outlined" onClick={handleClick}>Derive Recipe</Button>
-<br></br>
-<br></br>
+      <Button variant="outlined" onClick={handleClick}>Send Draft</Button>
+
+      <Button variant="outlined" onClick={handleEdit}>Send Edit</Button>
 
     </Container>
   );
