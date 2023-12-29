@@ -1,3 +1,6 @@
+To Run Project : 
+        1- cd backend--> python manage.py runserver
+        2- cd ui --> npm install, npm start
 Tech Requirements
         numpy==1.24.2
         bcrypt==3.1.6
