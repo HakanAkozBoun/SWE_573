@@ -138,7 +138,8 @@ export default function AddPost() {
     const formData = new FormData();
     formData.append("file", selectedFile);
 
-    axios
+    if(selectedFile){
+      axios
       .post(`${process.env.REACT_APP_API_URL}/api/File/`, formData, {
         headers: {
           Authorization: `Basic ${token}`,
@@ -148,10 +149,7 @@ export default function AddPost() {
       .then((response) => {
         console.log(response);
       });
-
-
-
-
+    }
 
 
     const newData = [...foodData];
@@ -169,18 +167,37 @@ export default function AddPost() {
 
 
     setData(newData);
-    let dataPost = {
-      category: cate,
-      title: data.get("title"),
-      slug: data.get("slug"),
-      excerpt: data.get("excerpt"),
-      content: data.get("content"),
-      contentTwo: data.get("contentTwo"),
-      image: "image/" + selectedFile.name,
-      ingredients: data.get("ingredients"),
-      postlabel: "POPULAR",
-      list: foodData
-    };
+    let dataPost;
+
+    if (location.state.edit === 1) {
+
+      dataPost = {
+        id: location.state.id,
+        category: cate,
+        title: data.get("title"),
+        slug: data.get("slug"),
+        excerpt: data.get("excerpt"),
+        content: data.get("content"),
+        contentTwo: data.get("contentTwo"),
+        image: selectedFile?"image/" + selectedFile.name:location.state.image,
+        ingredients: data.get("ingredients"),
+        postlabel: "POPULAR",
+        list: foodData
+      }
+    } else {
+      dataPost = {
+        category: cate,
+        title: data.get("title"),
+        slug: data.get("slug"),
+        excerpt: data.get("excerpt"),
+        content: data.get("content"),
+        contentTwo: data.get("contentTwo"),
+        image: "image/" + selectedFile.name,
+        ingredients: data.get("ingredients"),
+        postlabel: "POPULAR",
+        list: foodData
+      };
+    }
 
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/CreateBlog/`, dataPost, {
@@ -188,7 +205,6 @@ export default function AddPost() {
       })
       .then((response) => {
         console.log(response);
-        navigate("/");
       });
   };
 
@@ -207,7 +223,7 @@ export default function AddPost() {
                   <InputLabel>
                     Category
                   </InputLabel>
-                  <Select label="Category" onChange={handleChange}>
+                  <Select label="Category" onChange={handleChange} defaultValue={location.state === null ? null : location.state.category}>
                     {catelist.map((res) => (
                       <MenuItem value={res.id}>{res.name}</MenuItem>
                     ))}
@@ -222,7 +238,7 @@ export default function AddPost() {
                 id="title"
                 name="title"
                 label="Title"
-                defaultValue={location.state === null?null:location.state.title}
+                defaultValue={location.state === null ? null : location.state.title}
                 fullWidth
                 variant="standard"
               />
@@ -233,7 +249,7 @@ export default function AddPost() {
                 id="slug"
                 name="slug"
                 label="Slug"
-                defaultValue={location.state === null?null:location.state.slug}
+                defaultValue={location.state === null ? null : location.state.slug}
                 fullWidth
                 variant="standard"
               />
@@ -244,7 +260,7 @@ export default function AddPost() {
                 id="excerpt"
                 name="excerpt"
                 label="Excerpt"
-                defaultValue={location.state === null?null:location.state.excerpt}
+                defaultValue={location.state === null ? null : location.state.excerpt}
                 fullWidth
                 variant="standard"
               />
@@ -256,7 +272,7 @@ export default function AddPost() {
                 id="content"
                 name="content"
                 label="Description"
-                defaultValue={location.state === null?null:location.state.content}
+                defaultValue={location.state === null ? null : location.state.content}
                 fullWidth
                 variant="standard"
               />
@@ -266,7 +282,7 @@ export default function AddPost() {
                 id="contentTwo"
                 name="contentTwo"
                 label="Instruction List"
-                defaultValue={location.state === null?null:location.state.contentTwo}
+                defaultValue={location.state === null ? null : location.state.contentTwo}
                 fullWidth
                 variant="standard"
               />
@@ -275,7 +291,7 @@ export default function AddPost() {
               <TextField
                 id="ingredients"
                 name="ingredients"
-                defaultValue={location.state === null?null:location.state.ingredients}
+                defaultValue={location.state === null ? null : location.state.ingredients}
                 label="Ingredients List Name"
                 fullWidth
                 variant="standard"
@@ -336,7 +352,7 @@ export default function AddPost() {
             </Grid>
             <Grid item xs={12} sm={3}>
               <FormControl fullWidth>
-                <TextField label="Amount" size="small" variant="outlined" type="number" defaultValue={newRow.amount}
+                <TextField label="Amount" size="small" variant="outlined" type="number" value={newRow.amount}
                   onChange={(e) => setNewRow({ ...newRow, amount: Number(e.target.value) })} />
               </FormControl>
             </Grid>
