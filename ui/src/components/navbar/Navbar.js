@@ -34,7 +34,7 @@ const Navbar = () => {
     cursor: "pointer",
   });
   const MenuItems = [
-    { Name: "Home", Link: "/" },
+    { Name: "Home", Link: "http://157.230.125.5:3000/" },
     { Name: "Add Recipes", Link: "/addpost" },
   ];
   const [openMenu, setOpenMenu] = useState(false);
@@ -72,7 +72,7 @@ const Navbar = () => {
       <AppBar color="default" position="sticky" elevation={0}>
         <StyledToolbar>
           <Box flex={{ xs: 25, md: 1 }}>
-            <Link href="http://localhost:3000/" sx={{ textDecoration: "none" }}>
+            <Link href="/" sx={{ textDecoration: "none" }}>
               <Typography
                 variant="h5"
                 color={"purple"}
