@@ -34,7 +34,7 @@ const Navbar = () => {
     cursor: "pointer",
   });
   const MenuItems = [
-    { Name: "Home", Link: "/" },
+    { Name: "Home", Link: "http://157.230.125.5:3000/" },
     { Name: "Add Recipes", Link: "/addpost" },
   ];
   const [openMenu, setOpenMenu] = useState(false);
