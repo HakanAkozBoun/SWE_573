@@ -21,7 +21,11 @@ SECRET_KEY = 'django-insecure-$2ri))89tw!-$bd0#y2kh193*1)ms&y8l33mg@@q4+uf6mkd59
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+BACKEND_ALLOWED_HOSTS = env("BACKEND_ALLOWED_HOSTS", default="localhost").strip()
+BACKEND_CORS_ALLOWED_ORIGINS = env("BACKEND_CORS_ALLOWED_ORIGINS", default="http://localhost:3000").strip()
+
+ALLOWED_HOSTS = BACKEND_ALLOWED_HOSTS.split(",")
+CORS_ALLOWED_ORIGINS = BACKEND_CORS_ALLOWED_ORIGINS.split(",")
 
 
 # Application definition
@@ -170,8 +174,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': env("DB_NAME", default="postgres"),
         'USER': env("DB_USER", default="postgres"),
-        'PASSWORD': env("DB_PASSWORD", default="postgres"),
-        'HOST': env("DB_HOST", default="localhost"),
+        'PASSWORD': env("DB_PASSWORD", default="mysecretpassword"),
+        'HOST': env("DB_HOST", default="db"),
         'PORT': env("DB_PORT", default="5432"),
     },
 }

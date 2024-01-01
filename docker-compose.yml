@@ -11,6 +11,8 @@ services:
   frontend:
     build: ./ui
     hostname: frontend
+    environment:
+      REACT_APP_API_URL: 'http://localhost:8000'
     ports:
       - "3000:3000"
     depends_on:
@@ -18,5 +20,7 @@ services:
   db:
     image: postgres:15.3-alpine
     hostname: db
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
     ports:
       - 5432:5432
