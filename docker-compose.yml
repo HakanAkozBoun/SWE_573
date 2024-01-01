@@ -12,7 +12,7 @@ services:
     build: ./ui
     hostname: frontend
     environment:
-      REACT_APP_API_URL: 'http://localhost:8000'
+      REACT_APP_API_URL: 'http://157.230.125.5:8000,'
     ports:
       - "3000:3000"
     depends_on:
