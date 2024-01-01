@@ -4,12 +4,19 @@ services:
   backend:
     build: 
       context: ./backend
+    hostname: backend
     ports:
       - "8000:8000"
 
   frontend:
     build: ./ui
+    hostname: frontend
     ports:
       - "3000:3000"
     depends_on:
       - backend
+  db:
+    image: postgres:15.3-alpine
+    hostname: db
+    ports:
+      - 5432:5432
