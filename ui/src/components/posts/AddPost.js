@@ -168,23 +168,7 @@ export default function AddPost() {
 
     setData(newData);
     let dataPost;
-
-    if (location.state.edit === 1) {
-
-      dataPost = {
-        id: location.state.id,
-        category: cate,
-        title: data.get("title"),
-        slug: data.get("slug"),
-        excerpt: data.get("excerpt"),
-        content: data.get("content"),
-        contentTwo: data.get("contentTwo"),
-        image: selectedFile?"image/" + selectedFile.name:location.state.image,
-        ingredients: data.get("ingredients"),
-        postlabel: "POPULAR",
-        list: foodData
-      }
-    } else {
+    if (location.state === null) {
       dataPost = {
         category: cate,
         title: data.get("title"),
@@ -197,6 +181,37 @@ export default function AddPost() {
         postlabel: "POPULAR",
         list: foodData
       };
+
+    } else {
+      if(location.state.edit === 1){
+        dataPost = {
+          id: location.state.id,
+          category: cate,
+          title: data.get("title"),
+          slug: data.get("slug"),
+          excerpt: data.get("excerpt"),
+          content: data.get("content"),
+          contentTwo: data.get("contentTwo"),
+          image: selectedFile?"image/" + selectedFile.name:location.state.image,
+          ingredients: data.get("ingredients"),
+          postlabel: "POPULAR",
+          list: foodData
+        }
+      }else{
+        dataPost = {
+          category: cate,
+          title: data.get("title"),
+          slug: data.get("slug"),
+          excerpt: data.get("excerpt"),
+          content: data.get("content"),
+          contentTwo: data.get("contentTwo"),
+          image: "image/" + selectedFile.name,
+          ingredients: data.get("ingredients"),
+          postlabel: "POPULAR",
+          list: foodData
+        };
+      }
+
     }
 
     axios
