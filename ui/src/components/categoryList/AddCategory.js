@@ -51,18 +51,19 @@ export default function AdCategory() {
     let dataPost
 
 
-    if (location.state.edit === 1) {
+    if (location.state === null) {
+      dataPost = {
+        name: data.get("name"),
+        image: "image/" + selectedFile.name,
+      };
 
+    } else {
       dataPost = {
         id: location.state.id,
         name: data.get("name"),
         image: selectedFile?"image/" + selectedFile.name:location.state.image,
       };
-    } else {
-      dataPost = {
-        name: data.get("name"),
-        image: "image/" + selectedFile.name,
-      };
+
     }
 
 

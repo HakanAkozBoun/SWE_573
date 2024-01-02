@@ -1,3 +1,24 @@
+A repository for the term project - Software Engineering Bogazici University.
+
+The CookPad by Chef Hakan project has been established and produced for the SWE-573 term project. 
+During the presentation, the project was carefully documented and built from the ground up. 
+During the course of the semester, this repo and wiki will be active and up to date.
+
+More information may be found on the 
+
+Project can be visited : http://157.230.125.5:3000/ 
+Admin user login :http://157.230.125.5:3000/login test@test - 123123
+Requirements : https://github.com/HakanAkozBoun/SWE_573/wiki/03.Software-Requirements
+Design documents : https://github.com/HakanAkozBoun/SWE_573/wiki
+User Manuals : https://github.com/HakanAkozBoun/SWE_573/wiki/7.-User-Guide
+System Manuals: https://github.com/HakanAkozBoun/SWE_573/wiki/09.-System-Manuel
+User test Cases and Testing results : 
+Declaration of authentic work :https://github.com/HakanAkozBoun/SWE_573/wiki/08.-Declaration-of-authentic-work
+
+
+https://github.com/HakanAkozBoun/SWE_573
+
+
 To Run Project : 
         1- cd backend--> python manage.py runserver
         2- cd ui --> npm install, npm start
@@ -30,3 +51,5 @@ Tech Requirements
         django-environ==0.9.0
         psycopg2-binary==2.9.9
         pillow
+
+
